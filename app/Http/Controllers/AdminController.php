@@ -6,11 +6,7 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index($id)
     {
         if(view()->exists($id)){
@@ -76,7 +72,7 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-
+        //
     }
 
     /**
