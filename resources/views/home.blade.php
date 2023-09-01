@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@section('title')
+    Control Page - Invoices App
+@endsection
 @section('css')
     <!--  Owl-carousel css-->
     <link href="{{URL::asset('assets/plugins/owl-carousel/owl.carousel.css')}}" rel="stylesheet" />
@@ -434,10 +437,6 @@
             </div>
         </div>
     </div>
-    <!-- /row -->
-    </div>
-    </div>
-    <!-- Container closed -->
 @endsection
 @section('js')
     <!--Internal  Chart.bundle js -->
