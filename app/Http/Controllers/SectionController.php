@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SectionRequest;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,23 +29,20 @@ class SectionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SectionRequest $request)
     {
         $input = $request->all();
-        $exists = Section::where('section_name', '=', $input['section_name'])->exists();
 
-        if ($exists){
-            session()->flash('Error', 'Already exists');
-        }
-        else{
+        $validated = $request->validated();
+
             Section::create([
                 'section_name' => $request->section_name,
                 'description' => $request->description,
                 'created_by' => (Auth::user()->name),
             ]);
+
             session()->flash('Add','Section created successfully');
-        }
-        return redirect('/sections');
+            return redirect('/sections');
     }
 
     /**
@@ -66,16 +64,37 @@ class SectionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Section $section)
+    public function update(Request $request)
     {
-        //
+        $id = $request->id;
+
+        $this->validate($request,[
+            'section_name' => 'required|max:255|unique:sections,section_name'
+        ], [
+            'name.required' => 'the name is required',
+            'name.regex' => 'That is not a valid name',
+            'name.unique' => 'The name is already taken'
+        ]);
+
+        $section = Section::find($id);
+
+        $section->update([
+            'section_name' => $request->section_name,
+            'description' => $request->description,
+        ]);
+
+        session()->flash('Update', 'successfully been updated');
+        return redirect('/sections');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Section $section)
+    public function destroy(Request $request)
     {
-        //
+        $id = $request->id;
+        Section::find($id)->delete();
+        session()->flash('delete','Section deleted successfully');
+        return redirect('/sections');
     }
 }
